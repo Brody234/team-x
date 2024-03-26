@@ -5,6 +5,15 @@ const Event = require("../models/event")
 const Org = require("../models/club");
 const Tag = ("../models/tag");
 
+router.get('/all', async (req, res) =>{
+    try{
+        const users = await User.find()
+        res.send(users)
+    }
+    catch(error){
+        return res.status(500).json({message: err.message})
+    }
+})
 
 router.patch('/:id', getUser, async (req, res) => {
     if (req.body.name != null) {
