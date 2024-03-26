@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require("../models/user");
 const Event = require("../models/event")
-const Org = require("../models/club");
+const Club = require("../models/club");
 const Tag = ("../models/tag");
 
 router.get('/all', async (req, res) =>{
