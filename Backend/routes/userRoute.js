@@ -54,7 +54,7 @@ router.post('/create', unique, async (req, res) => {
         emailNotifications: req.body.emailNotifications,
         tags: req.body.tags,
         hidden: req.body.hidden,
-        tags: [],
+        tags: req.body.tags,
         clubs: [],
         clubsAdministrated: [],
         clubsOwned: [],
