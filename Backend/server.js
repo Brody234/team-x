@@ -24,6 +24,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-
+const userRouter = require('./routes/user');
+app.use('/user', userRouter);
 
 app.listen(port, () => console.log('server has started'));

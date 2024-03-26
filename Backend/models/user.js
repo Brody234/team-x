@@ -47,11 +47,6 @@ const userSchema = new Schema({
         require: true,
         default: true
     },
-    eventsGoing: {
-        type: [Schema.Types.ObjectId],
-        require: true,
-        default: []
-    },
     hidden: {
         type: Boolean,
         require: true,
