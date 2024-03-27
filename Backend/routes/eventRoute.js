@@ -15,6 +15,19 @@ router.get('/all', async (req, res) =>{
     }
 })
 
+router.patch('/going/:id', getEvent, getUser, async(req, res)=>{
+    res.event.attendees.push(res.user)
+    res.user.events.push(res.event)
+    try{
+        const newE = await res.event.save()
+        const newU = await res.user.save()
+        res.status(200).json({message: "Going To Event"})
+    }
+    catch(err){
+        res.status(500).json({message: err.message})
+    }
+})
+
 router.patch('/:id', getEvent, async (req, res) => {
     if (req.body.name != null) {
         res.user.name = req.body.name;
@@ -88,6 +101,21 @@ async function getEvent(req, res, next) {
         return res.status(500).json({ message: err.message });
     }
     res.event = event;
+    next();
+};
+
+async function getUser(req, res, next) {
+    let user
+    try {
+        user = await User.findById(req.body.userId);
+        if (user == null) {
+            return res.status(404).json({ message: "Cannot Find User" });
+        }
+    }
+    catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+    res.user = user;
     next();
 };
 
