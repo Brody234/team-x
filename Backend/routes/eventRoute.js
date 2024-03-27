@@ -63,7 +63,7 @@ router.patch('/:id', getEvent, async (req, res) => {
     }
 });
 
-router.post('/create', async (req, res) => {
+router.post('/create', getClub, async (req, res) => {
     const event = new Event({
         name: req.body.name,
         tags: req.body.tags,
@@ -76,8 +76,10 @@ router.post('/create', async (req, res) => {
     });
     try {
         
-        const newUser = await event.save();
-        res.status(201).json(newUser);
+        const newEvent = await event.save();
+        res.club.events.push(newEvent._id)
+        const saveClub = await res.club.save()
+        res.status(201).json(newEvent);
         
     }
     catch (err) {
@@ -116,6 +118,21 @@ async function getUser(req, res, next) {
         return res.status(500).json({ message: err.message });
     }
     res.user = user;
+    next();
+};
+
+async function getClub(req, res, next) {
+    let club
+    try {
+        club = await Club.findById(req.body.clubPosting);
+        if (club == null) {
+            return res.status(404).json({ message: "Cannot Find Club" });
+        }
+    }
+    catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+    res.club = club;
     next();
 };
 
