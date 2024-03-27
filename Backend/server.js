@@ -24,7 +24,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
-const userRouter = require('./routes/user');
+const userRouter = require('./routes/userRoute');
 app.use('/user', userRouter);
+const eventRouter = require('./routes/eventRoute');
+app.use('/event', eventRouter);
+const clubRouter = require('./routes/clubRoute')
+app.use('/club', clubRouter)
 
 app.listen(port, () => console.log('server has started'));

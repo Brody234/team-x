@@ -62,13 +62,10 @@ router.post('/create', async (req, res) => {
         location: req.body.location,
     });
     try {
-        if (res.issue === "None") {
-            const newUser = await events.save();
-            res.status(201).json(newUser);
-        }
-        else {
-            res.status(400).json({ message: res.issue })
-        }
+        
+        const newUser = await event.save();
+        res.status(201).json(newUser);
+        
     }
     catch (err) {
         res.status(400).json({ message: err.message });
