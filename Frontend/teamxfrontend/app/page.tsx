@@ -6,6 +6,7 @@ import Landing from "./landing/page.jsx"
 export default function App() {
   
   return (
+      
       <Landing></Landing>
   );
 }
