@@ -9,13 +9,7 @@ const loginSchema = new Schema({
     saltedPasswordHash: {
         type: String,
         required: true,
-    },
-    // single session for now; TODO add multi-session auth
-    lastValidJwt: {
-        type: String,
-        required: false,
-        default: null
-    },
+    }
 })
 
 module.exports = mongoose.model('Login', loginSchema);

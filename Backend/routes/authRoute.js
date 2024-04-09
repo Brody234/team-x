@@ -25,11 +25,9 @@ router.post('/login', async (req, res) => {
 
         // Issue JWT token
         const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '21d' });
-        user.lastValidJwt = token;
-        await user.save();
 
         //TODO remove user return--it is just for testing.
-        res.status(200).json({ token, user });
+        res.status(200).json({ token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -57,7 +55,6 @@ router.post('/register', async (req, res) => {
         const newUser = new Login({
             email,
             saltedPasswordHash: hashedPassword,
-
         });
         await newUser.save();
 
