@@ -4,7 +4,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 /**
  * This function verifies the JWT in the header. If it is valid, add the authenticated account's 
- * email to the request. If it is invalid, reject it.
+ * email to the request at req.authorizedEmail. If it is invalid, reject it.
  * @param {*} req request
  * @param {*} res response
  * @param {*} next next function to be called
