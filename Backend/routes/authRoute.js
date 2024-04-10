@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Login = require("../models/login");
 
+const { createUser } = require("../common/users");
+
 const saltRounds = 12;
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -52,13 +54,17 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Create new user
-        const newUser = new Login({
+        Login.create({
             email,
             saltedPasswordHash: hashedPassword,
+        }).catch((err) => {
+            return res.status(400).json({ message: err.message });
         });
-        await newUser.save();
 
-        res.status(201).json({ message: 'User registered successfully' });
+        //create user info for new user
+        const user = await createUser(req.body);
+
+        res.status(201).json(user);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });

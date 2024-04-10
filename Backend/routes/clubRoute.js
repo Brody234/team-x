@@ -5,7 +5,7 @@ const Event = require("../models/event")
 const Club = require("../models/club");
 const Tag = ("../models/tag");
 
-const { verifyRequest } = require("../middleware/auth");
+const { verifyRequest } = require("../common/auth");
 
 router.get('/all', async (req, res) =>{
     try{

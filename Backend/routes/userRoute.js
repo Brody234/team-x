@@ -4,9 +4,10 @@ const User = require("../models/user");
 const Event = require("../models/event")
 const Club = require("../models/club");
 const Tag = ("../models/tag");
+const { createUser } = require("../common/users");
 
 //for now every request requires you to be logged in
-const { verifyRequest } = require("../middleware/auth")
+const { verifyRequest } = require("../common/auth")
 
 router.get('/all', verifyRequest, async (req, res) =>{
     try{
@@ -59,22 +60,9 @@ router.patch('/:id', verifyRequest, getUser, async (req, res) => {
 });
 
 router.post('/create', verifyRequest, unique, async (req, res) => {
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        events: [],
-        emailNotifications: req.body.emailNotifications,
-        tags: req.body.tags,
-        hidden: req.body.hidden,
-        tags: req.body.tags,
-        clubs: [],
-        clubsAdministrated: [],
-        clubsOwned: [],
-        pfp: req.body.pfp
-    });
     try {
         if (res.issue === "None") {
-            const newUser = await user.save();
+            const newUser = await createUser(req.body);
             res.status(201).json(newUser);
         }
         else {
@@ -105,7 +93,6 @@ async function unique(req, res, next) {
         }
     }
     catch {
-
     }
     next()
 }
