@@ -44,8 +44,14 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({message: 'Passwords do not match.'});
         }
 
+        // hard code email check for now
+        if(!email.endsWith("@umass.edu"))
+        {
+            return res.status(400).json({message: 'Email must be a valid UMass email.'});
+        }
+
         // Check if email is already registered
-        const existingUser = await Login.findOne({ email });
+        const existingUser = await Login.findOne({ email: email.trim() });
         if (existingUser) {
             return res.status(400).json({ message: 'Email already registered' });
         }
@@ -55,7 +61,7 @@ router.post('/register', async (req, res) => {
 
         // Create new user
         Login.create({
-            email,
+            email: email.trim(),
             saltedPasswordHash: hashedPassword,
         }).catch((err) => {
             return res.status(400).json({ message: err.message });
