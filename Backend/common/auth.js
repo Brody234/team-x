@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const User = require('../models/user')
 /**
  * This function verifies the JWT in the header. If it is valid, add the authenticated account's 
  * email to the request at req.authorizedEmail. If it is invalid, reject it.
@@ -25,6 +26,7 @@ async function verifyRequest(req, res, next) {
         //for instance, you shouldn't be able to get the information of any user when
         //having an arbitrary token
         req.authorizedEmail = decoded.email;
+        req.body.user = User.findOne({email : req.authorizedEmail})
         next();
     });
 }
