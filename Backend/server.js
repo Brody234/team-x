@@ -28,7 +28,9 @@ const userRouter = require('./routes/userRoute');
 app.use('/user', userRouter);
 const eventRouter = require('./routes/eventRoute');
 app.use('/event', eventRouter);
-const clubRouter = require('./routes/clubRoute')
-app.use('/club', clubRouter)
+const clubRouter = require('./routes/clubRoute');
+app.use('/club', clubRouter);
+const authRouter = require('./routes/authRoute');
+app.use('/auth', authRouter);
 
 app.listen(port, () => console.log('server has started'));
