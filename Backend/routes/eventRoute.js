@@ -5,8 +5,6 @@ const Event = require("../models/event")
 const Club = require("../models/club");
 const Tag = ("../models/tag");
 
-const { verifyRequest } = require("../common/auth");
-
 router.get('/all', async (req, res) =>{
     try{
         const events = await Event.find()
@@ -17,8 +15,8 @@ router.get('/all', async (req, res) =>{
     }
 })
 
-router.patch('/going/:id', verifyRequest, getEvent, async(req, res)=>{
-    res.event.attendees.push(req.body.user)
+router.patch('/going/:id', getEvent, getUser, async(req, res)=>{
+    res.event.attendees.push(res.user)
     res.user.events.push(res.event)
     try{
         const newE = await res.event.save()
@@ -30,7 +28,7 @@ router.patch('/going/:id', verifyRequest, getEvent, async(req, res)=>{
     }
 })
 
-router.patch('/:id', verifyRequest, getEvent, async (req, res) => {
+router.patch('/:id', getEvent, async (req, res) => {
     if (req.body.name != null) {
         res.user.name = req.body.name;
     };
@@ -65,7 +63,7 @@ router.patch('/:id', verifyRequest, getEvent, async (req, res) => {
     }
 });
 
-router.post('/create', verifyRequest, getClub, async (req, res) => {
+router.post('/create', getClub, async (req, res) => {
     const event = new Event({
         name: req.body.name,
         tags: req.body.tags,

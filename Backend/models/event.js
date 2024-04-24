@@ -41,7 +41,7 @@ const eventSchema = new Schema({
         type: String,
         require: true,
         default: "This event is cool"
-    }
+    },
 })
 
 module.exports = mongoose.model('event', eventSchema);

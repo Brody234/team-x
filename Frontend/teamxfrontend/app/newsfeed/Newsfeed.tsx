@@ -1,152 +1,84 @@
-import React, { useState } from 'react';
-import Header from '../header/Header';
-import { useEvents } from '../contexts/EventContext';
-
-interface NewsItem {
-  id: number;
-  title: string;
-  imageUrl: string;
-  content: string;
-}
-
-const initialNewsItems: NewsItem[] = [
-  {
-    id: 1,
-    title: 'News Title 1',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-  {
-    id: 2,
-    title: 'News Title 2',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-  {
-    id: 3,
-    title: 'News Title 3',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-  {
-    id: 1,
-    title: 'News Title 1',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-  {
-    id: 2,
-    title: 'News Title 2',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-  {
-    id: 3,
-    title: 'News Title 3',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-  {
-    id: 1,
-    title: 'News Title 1',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-  {
-    id: 2,
-    title: 'News Title 2',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-  {
-    id: 3,
-    title: 'News Title 3',
-    imageUrl: 'https://via.placeholder.com/300x200',
-    content: 'Something something event',
-  },
-
-];
-
-
-//Pull Data from Backend
-
+import React, { useEffect, useState } from 'react';
+import Header from '../header/header';
+import SearchBar from '../component/search';
+import Button from '../component/button';
+import { useEvents } from '../contexts/EventContext'
 
 
 const NewsFeed: React.FC = () => {
-  const {events, setEvents} = useEvents();
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filteredNews, setFilteredNews] = useState<NewsItem[]>(initialNewsItems);
+  const [prevScrollPos, setPrevScrollPos] = useState<number>(0);
+  const [visible, setVisible] = useState<boolean>(true);
+  const { events } = useEvents(); 
+  const [filteredNews, setFilteredNews] = useState<Event[]>([]);
+
+  // Function to handle scroll events
+  const handleScroll = () => {
+    const currentScrollPos = window.scrollY;
+    setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
+    setPrevScrollPos(currentScrollPos);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [prevScrollPos, visible]);
+
+  useEffect(() => {
+
+    const filtered = events.filter((event: any, i: number) =>
+      event.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredNews(filtered);
+  }, [searchQuery, events]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setSearchQuery(value);
-    setFilteredNews(
-      initialNewsItems.filter((item) =>
-        item.title.toLowerCase().includes(value.toLowerCase())
-      )
-    );
   };
-  
 
+
+
+  const handleClick = () => {
+    //Back end code goes here
+  };
 
   return (
-
     <>
-    {/* Include the Header component */}
-    <Header />
+      {/* Include the Header component */}
+      <div className={`sticky top-0 z-20 ${visible ? 'block' : 'hidden'}`}>
+        <Header />
+      </div>
 
-    <div className ="flow-root"></div>
 
-    <div className="container ">
-      <div className="flex justify-start">
-        <div className="col-md-3 pr-20 pl-10">
-          <h2>Search</h2>
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleSearch}
-            style={{ color: 'black' }}
-          />
-          <h2>Filters</h2>
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="filter1" />
-            <label className="form-check-label" htmlFor="filter1">
-              Filter 1
-            </label>
-          </div>
-          <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="filter2" />
-            <label className="form-check-label" htmlFor="filter2">
-              Filter 2
-            </label>
-          </div>
+      <div className="flex">
+        {/* Search bar container */}
+        <div className="sticky-search bg-gray-100 p-4 top-0 z-10 h-screen w-64 border-r border-gray-300">
+          <SearchBar value={searchQuery} onChange={handleSearch} />
         </div>
-        <div className="flex justify-end pt-6 pl-80 grid gap-4 grid-cols-3">
-          {/*filteredNews.map((item) => (
-            <div className="news-item mb-4" key={item.id}>
-              <img src={item.imageUrl} alt="News" className="img-fluid mb-2" />
-              <h3>{item.title}</h3>
-              <p>{item.content}</p>
+
+        {/* Main content container */}
+        <div className="container mx-auto px-4 mt-16">
+          <div className="col-md-9">
+            <div className="flex justify-center pt-6 grid gap-4 grid-cols-2">
+            {filteredNews.map((events: any, i: number) => (
+                <div key={i} className="news-item mb-4 bg-white rounded p-4">
+                  <div className="flex flex-col items-center">
+                    <img src={events.image} alt="News" className="img-fluid mb-2" />
+                    <h3 className="text-center">{events.name}</h3>
+                    <p className="text-center">{events.description}</p>
+                    <Button onClick={handleClick}>Subscribe</Button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))*/}
-          {
-            events.map((event: any, i: number) => {
-              console.log(event);
-              return <div className="news-item mb-4" key={i}>
-                <img src={event.image} alt="News" className="img-fluid mb-2" />
-                <h3>{event.name}</h3>
-                <p>{event.description}</p>
-              </div>
-            })
-          }
+          </div>
         </div>
       </div>
-    </div>
-  </>
-);
+    </>
+  );
 };
-
 
 export default NewsFeed;
