@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import {EventsProvider, useEvents} from "./contexts/EventContext"
 import {LoginProvider} from './contexts/LoginContext'
+import {ClubProvider} from './contexts/ClubContext'
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,8 +25,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <EventsProvider>
           <LoginProvider>
-           {children}
-
+            <ClubProvider>
+            {children}
+           </ClubProvider>
           </LoginProvider>
         </EventsProvider>
       </body>

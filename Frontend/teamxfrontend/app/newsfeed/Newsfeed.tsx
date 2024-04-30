@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Header from '../header/Header';
+import Header from '../header/header';
 import { useEvents } from '../contexts/EventContext';
 
 interface NewsItem {

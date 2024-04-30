@@ -74,10 +74,9 @@ router.post('/create', verifyRequest, unique, async (req, res) => {
     }
 });
 
-router.get('/me', verifyRequest, getUser, (req, res) => {
+router.get('/me', verifyRequest, (req, res) => {
     res.json(req.body.user);
 });
-
 
 async function unique(req, res, next) {
     try {

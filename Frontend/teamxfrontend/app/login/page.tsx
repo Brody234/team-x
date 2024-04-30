@@ -5,12 +5,18 @@ import UmassLogo from "../../staticimages/UMassLogo.png"
 import {useState} from 'react'
 import newRequest from "../utils/UseRequest";
 import {useLogin} from "../contexts/LoginContext"
-import Router from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const {setToken} = useLogin()
+  const {setToken, setLocalUser} = useLogin()
+
+  const params = useSearchParams();
+  const router = useRouter();
+
+  const redirect = params.get("redirect") || "/";
+
   const onSignUp = () =>{
 
   }
@@ -18,8 +24,18 @@ export default function LoginPage() {
     const token = await newRequest.post('/auth/login', {email: email, password: password})
     setToken(token.data)
     console.log(token.data)
+
+    //load local user information and provide token as credentials
+    const localUser = await newRequest.get('/user/me', {headers : {token: token.data.token}})
+    setLocalUser(localUser.data);
+    console.log(localUser.data);
+
+    // wait 3s
+    await new Promise(r => setTimeout(r, 3000));
+
     if(token.data){
-      window.location.href = "/"
+      console.log(redirect);
+      router.push(redirect);
     }
   }
 
