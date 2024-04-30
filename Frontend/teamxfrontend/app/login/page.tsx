@@ -21,7 +21,13 @@ export default function LoginPage() {
 
   }
   const onLogin = async () =>{
-    const token = await newRequest.post('/auth/login', {email: email, password: password})
+    let token;
+    try {
+      token = await newRequest.post('/auth/login', {email: email, password: password});
+    } catch (err) {
+      alert("Invalid email or password");
+      return;
+    }
     setToken(token.data)
     console.log(token.data)
 
@@ -29,9 +35,6 @@ export default function LoginPage() {
     const localUser = await newRequest.get('/user/me', {headers : {token: token.data.token}})
     setLocalUser(localUser.data);
     console.log(localUser.data);
-
-    // wait 3s
-    await new Promise(r => setTimeout(r, 3000));
 
     if(token.data){
       console.log(redirect);
@@ -47,7 +50,7 @@ export default function LoginPage() {
       <div className="flex justify-center items-center px-16 py-20 w-full bg-white max-md:px-5 max-md:max-w-full">
         <div className="flex gap-5 py-9 pr-8 pl-20 mt-2 mb-1 max-w-full bg-green-300 rounded-3xl w-[795px] max-md:flex-wrap max-md:px-5">
           <div className="flex flex-col grow shrink-0 justify-center mt-2 basis-0 w-fit max-md:max-w-full">
-            <div style = {{alignItems: "center", alignContent: "center", width: "100%"}}>
+            <div className="flex justify-center items-center w-12 h-12 mx-auto bg-white rounded-full">
               <Image src={UmassLogo} alt = {"UmassLogo"} style = {{width: "24px", height: "24px"}}></Image>
             </div>
             <div className="self-center mt-6 text-3xl font-medium text-center text-zinc-800">

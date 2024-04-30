@@ -13,9 +13,13 @@ export default function Profile() {
   const { getClub } = useClubs();
   const router = useRouter();
 
-  if(!localUser)
-    window.location.href = "/login?redirect=/profile";
+  if(!localUser) {
+    router.push("/login?redirect=/profile", {})
+    return <div>Redirecting to login...</div>
+  }
 
+  //this line is temporary until we want to view other users' pages while not signed in as them
+  //they will be allowed to see a limited subset of information as compared to their own profile view
   const user = localUser;
 
   return (
