@@ -17,8 +17,8 @@ router.get('/all', async (req, res) =>{
     }
 })
 
-router.patch('/going/:id', verifyRequest, getEvent, getUser, async(req, res)=>{
-    res.event.attendees.push(res.user)
+router.patch('/going/:id', verifyRequest, getEvent, async(req, res)=>{
+    res.event.attendees.push(req.body.user)
     res.user.events.push(res.event)
     try{
         const newE = await res.event.save()

@@ -132,9 +132,9 @@ const NewsFeed: React.FC = () => {
             </div>
           ))*/}
           {
-            events.map((event: any) => {
+            events.map((event: any, i: number) => {
               console.log(event);
-              return <div className="news-item mb-4" key={event._id}>
+              return <div className="news-item mb-4" key={i}>
                 <img src={event.image} alt="News" className="img-fluid mb-2" />
                 <h3>{event.name}</h3>
                 <p>{event.description}</p>
@@ -147,8 +147,6 @@ const NewsFeed: React.FC = () => {
   </>
 );
 };
-
-
 
 
 export default NewsFeed;

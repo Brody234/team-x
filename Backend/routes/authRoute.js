@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '21d' });
 
         //TODO remove user return--it is just for testing.
-        res.status(200).json({ token });
+        res.send({ token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
