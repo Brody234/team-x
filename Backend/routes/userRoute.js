@@ -4,8 +4,12 @@ const User = require("../models/user");
 const Event = require("../models/event")
 const Club = require("../models/club");
 const Tag = ("../models/tag");
+const { createUser } = require("../common/users");
 
-router.get('/all', async (req, res) =>{
+//for now every request requires you to be logged in
+const { verifyRequest } = require("../common/auth")
+
+router.get('/all', verifyRequest, async (req, res) =>{
     try{
         const users = await User.find()
         res.send(users)
@@ -15,39 +19,39 @@ router.get('/all', async (req, res) =>{
     }
 })
 
-router.patch('/:id', getUser, async (req, res) => {
+router.patch('/me', verifyRequest, async (req, res) => {
     if (req.body.name != null) {
-        res.user.name = req.body.name;
+        req.body.user.name = req.body.name;
     };
     if (req.body.email != null) {
-        res.user.email = req.body.email;
+        req.body.user.email = req.body.email;
     };
     if (req.body.events != null) {
-        res.user.events = req.body.events;
+        req.body.user.events = req.body.events;
     };
     if (req.body.emailNotifications != null) {
-        res.user.emailNotifications = req.body.emailNotifications;
+        req.body.user.emailNotifications = req.body.emailNotifications;
     };
     if (req.body.tags != null) {
-        res.user.tags = req.body.tags;
+        req.body.user.tags = req.body.tags;
     };
     if (req.body.hidden != null) {
-        res.user.hidden = req.body.hidden;
+        req.body.user.hidden = req.body.hidden;
     };
     if (req.body.clubs != null) {
-        res.user.clubs = req.body.clubs;
+        req.body.user.clubs = req.body.clubs;
     };
     if (req.body.pfp != null) {
-        res.user.pfp = req.body.pfp;
+        req.body.user.pfp = req.body.pfp;
     };
     if (req.body.clubsOwned != null){
-        res.user.clubsOwned = req.body.clubsOwned;
+        req.body.user.clubsOwned = req.body.clubsOwned;
     };
     if (req.body.clubsAdministrated != null){
-        res.user.clubsAdministrated = req.body.clubsAdministrated;
+        req.body.user.clubsAdministrated = req.body.clubsAdministrated;
     };
     try {
-        const updatedUser = await res.user.save();
+        const updatedUser = await req.body.user.save();
         res.json({ message: "User Updated" });
     }
     catch (err) {
@@ -55,23 +59,10 @@ router.patch('/:id', getUser, async (req, res) => {
     }
 });
 
-router.post('/create', unique, async (req, res) => {
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        events: [],
-        emailNotifications: req.body.emailNotifications,
-        tags: req.body.tags,
-        hidden: req.body.hidden,
-        tags: req.body.tags,
-        clubs: [],
-        clubsAdministrated: [],
-        clubsOwned: [],
-        pfp: req.body.pfp
-    });
+router.post('/create', verifyRequest, unique, async (req, res) => {
     try {
         if (res.issue === "None") {
-            const newUser = await user.save();
+            const newUser = await createUser(req.body);
             res.status(201).json(newUser);
         }
         else {
@@ -83,8 +74,8 @@ router.post('/create', unique, async (req, res) => {
     }
 });
 
-router.get('/:id', getUser, (req, res) => {
-    res.json(res.user);
+router.get('/me', verifyRequest, getUser, (req, res) => {
+    res.json(req.body.user);
 });
 
 
@@ -102,7 +93,6 @@ async function unique(req, res, next) {
         }
     }
     catch {
-
     }
     next()
 }
