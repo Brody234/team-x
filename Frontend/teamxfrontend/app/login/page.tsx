@@ -6,6 +6,7 @@ import {useState} from 'react'
 import newRequest from "../utils/UseRequest";
 import {useLogin} from "../contexts/LoginContext"
 import { useRouter, useSearchParams } from "next/navigation";
+import Header from "../header/header";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -44,11 +45,9 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col bg-fuchsia-600">
-      <div className="items-center pt-10 pr-16 pb-16 pl-20 w-full text-7xl font-medium tracking-tighter text-center text-lime-800 bg-neutral-300 leading-[70px] max-md:px-5 max-md:max-w-full max-md:text-4xl">
-        UMass Social Event Planner
-      </div>
+      <Header />
       <div className="flex justify-center items-center px-16 py-20 w-full bg-white max-md:px-5 max-md:max-w-full">
-        <div className="flex gap-5 py-9 pr-8 pl-20 mt-2 mb-1 max-w-full bg-green-300 rounded-3xl w-[795px] max-md:flex-wrap max-md:px-5">
+        <div className="flex items-center gap-5 py-9 pr-20 pl-20 mt-2 mb-1 max-w-full bg-green-300 rounded-3xl w-[795px] max-md:flex-wrap max-md:px-5">
           <div className="flex flex-col grow shrink-0 justify-center mt-2 basis-0 w-fit max-md:max-w-full">
             <div className="flex justify-center items-center w-12 h-12 mx-auto bg-white rounded-full">
               <Image src={UmassLogo} alt = {"UmassLogo"} style = {{width: "24px", height: "24px"}}></Image>

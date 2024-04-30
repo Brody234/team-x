@@ -27,9 +27,8 @@ export default function Profile() {
     <Header />
     <div className ="flow-root"></div>
 
-    <div className="items-center">
+    <div className="items-center space-y">
       <div className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <div className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
         <h1 className="text-6xl font-bold">
         {user.name ? user.name : "No Name"}
         </h1>
@@ -43,7 +42,6 @@ export default function Profile() {
         <p className="mt-3 text-2xl"> {/*TODO make club viewer more robust*/}
         Clubs: {user.clubs && user.clubs.length > 0 ? user.clubs.map((club: any) => getClub(club).name).join(", ") : "None"}
         </p>
-        </div>
       </div>
     </div>
     </>
