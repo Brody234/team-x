@@ -7,12 +7,12 @@ async function createUser(user) {
             email: user.email,
             events: [],
             emailNotifications: user.emailNotifications,
-            tags: user.tags,
+            tags: [],
             hidden: user.hidden,
             clubs: [],
             clubsAdministrated: [],
             clubsOwned: [],
-            pfp: user.pfp
+            pfp: user.pfp | ""
         })
     }
     catch (error) {

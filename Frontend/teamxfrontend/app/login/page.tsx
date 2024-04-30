@@ -5,12 +5,13 @@ import UmassLogo from "../../staticimages/UMassLogo.png"
 import {useState} from 'react'
 import newRequest from "../utils/UseRequest";
 import {useLogin} from "../contexts/LoginContext"
-import Router from "next/router";
+import {useRouter} from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const {setToken} = useLogin()
+  const router = useRouter()
   const onSignUp = () =>{
 
   }
@@ -39,7 +40,7 @@ export default function LoginPage() {
             </div>
             <button
               className="self-center mt-1 text-base underline text-neutral-900"
-              onClick={onSignUp}
+              onClick={()=>{router.push("./signup")}}
             >
               <span className="text-zinc-800">Don't have an account?</span>{" "}
               <span className="text-neutral-900">Sign up</span>
