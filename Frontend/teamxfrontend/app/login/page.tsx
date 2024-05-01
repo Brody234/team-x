@@ -5,34 +5,51 @@ import UmassLogo from "../../staticimages/UMassLogo.png"
 import {useState} from 'react'
 import newRequest from "../utils/UseRequest";
 import {useLogin} from "../contexts/LoginContext"
-import {useRouter} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import Header from "../header/header";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const {setToken} = useLogin()
-  const router = useRouter()
+  const {setToken, setLocalUser} = useLogin()
+
+  const params = useSearchParams();
+  const router = useRouter();
+
+  const redirect = params.get("redirect") || "/";
+
   const onSignUp = () =>{
 
   }
   const onLogin = async () =>{
-    const token = await newRequest.post('/auth/login', {email: email, password: password})
+    let token;
+    try {
+      token = await newRequest.post('/auth/login', {email: email, password: password});
+    } catch (err) {
+      alert("Invalid email or password");
+      return;
+    }
     setToken(token.data)
     console.log(token.data)
+
+    //load local user information and provide token as credentials
+    const localUser = await newRequest.get('/user/me', {headers : {token: token.data.token}})
+    setLocalUser(localUser.data);
+    console.log(localUser.data);
+
     if(token.data){
-      window.location.href = "/"
+      console.log(redirect);
+      router.push(redirect);
     }
   }
 
   return (
     <div className="flex flex-col bg-fuchsia-600">
-      <div className="items-center pt-10 pr-16 pb-16 pl-20 w-full text-7xl font-medium tracking-tighter text-center text-lime-800 bg-neutral-300 leading-[70px] max-md:px-5 max-md:max-w-full max-md:text-4xl">
-        UMass Social Event Planner
-      </div>
+      <Header />
       <div className="flex justify-center items-center px-16 py-20 w-full bg-white max-md:px-5 max-md:max-w-full">
-        <div className="flex gap-5 py-9 pr-8 pl-20 mt-2 mb-1 max-w-full bg-green-300 rounded-3xl w-[795px] max-md:flex-wrap max-md:px-5">
+        <div className="flex items-center gap-5 py-9 pr-20 pl-20 mt-2 mb-1 max-w-full bg-green-300 rounded-3xl w-[795px] max-md:flex-wrap max-md:px-5">
           <div className="flex flex-col grow shrink-0 justify-center mt-2 basis-0 w-fit max-md:max-w-full">
-            <div style = {{alignItems: "center", alignContent: "center", width: "100%"}}>
+            <div className="flex justify-center items-center w-12 h-12 mx-auto bg-white rounded-full">
               <Image src={UmassLogo} alt = {"UmassLogo"} style = {{width: "24px", height: "24px"}}></Image>
             </div>
             <div className="self-center mt-6 text-3xl font-medium text-center text-zinc-800">

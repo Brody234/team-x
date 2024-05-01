@@ -26,9 +26,11 @@ async function verifyRequest(req, res, next) {
         //for instance, you shouldn't be able to get the information of any user when
         //having an arbitrary token
         req.authorizedEmail = decoded.email;
-        req.body.user = User.findOne({email : req.authorizedEmail})
-        next();
     });
+    
+    req.body.user = await User.findOne({email: req.authorizedEmail}).exec();
+
+    next();
 }
 
 module.exports = { verifyRequest };
