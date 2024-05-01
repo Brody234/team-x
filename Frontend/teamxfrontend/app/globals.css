@@ -39,7 +39,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-color: white; /* Set body background color to white */
+  background-color: rgb(var(--background-start-rgb)); /* Set body background color to white */
 }
 
 @layer utilities {
