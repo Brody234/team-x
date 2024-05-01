@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  frontend:
+    build:
+      context: ./frontend/teamxfrontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend: # no exposed ports necessary here
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+      

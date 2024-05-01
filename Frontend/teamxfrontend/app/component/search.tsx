@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SearchBar = ({ value, onChange }) => {
+const SearchBar = ({ value, onChange }: any) => {
   return (
     <div className="container mx-auto">
       <h2 className="mb-4">Search</h2>
