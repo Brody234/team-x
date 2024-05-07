@@ -108,6 +108,33 @@ async function getEvent(req, res, next) {
     next();
 };
 
+router.put('/rsvp/:id', verifyRequest, getEvent, getUser, async (req, res) => {
+    const eventId = req.params.eventId;
+    const user = req.body.email;
+    const attending = req.body.attending; // Boolean value. True if attending, False if not attending
+
+    try {
+        if (attending) {
+            if (!res.event.attendees.includes(user)) {
+                res.event.attendees.push(user);
+            }
+            if (!res.user.events.includes(eventId)) {
+                res.user.events.push(eventId);
+            }
+        } else { // if attednig is false
+            res.event.attendees = res.event.attendees.filter(id => id.toString() !== user);
+            res.user.events = res.user.events.filter(id => id.toString() !== eventId);
+        }
+
+        await res.event.save();
+        await res.user.save();
+        res.json({ message: attending ? "RSVP to event as attending" : "RSVP to event as not attending" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 async function getUser(req, res, next) {
     let user
     try {
