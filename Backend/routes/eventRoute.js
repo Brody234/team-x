@@ -108,8 +108,8 @@ async function getEvent(req, res, next) {
     next();
 };
 
-router.put('/rsvp/:id', verifyRequest, getEvent, getUser, async (req, res) => {
-    const eventId = req.params.eventId;
+router.put('/rsvp', verifyRequest, getEvent, getUser, async (req, res) => {
+    const eventId = req.body.eventId;
     const user = req.body.email;
     const attending = req.body.attending; // Boolean value. True if attending, False if not attending
 
