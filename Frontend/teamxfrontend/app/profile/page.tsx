@@ -26,12 +26,12 @@ export default function Profile() {
     <>
     <Header />
     <div className ="flow-root"></div>
-
+    <div className="flex items-center gap-5 py-9 pr-20 pl-20 mt-2 mb-1 max-w-full bg-green-300 rounded-3xl w-[795px] max-md:flex-wrap max-md:px-5">
     <div className="items-center space-y">
-      <div className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold">
-        {user.name ? user.name : "No Name"}
-        </h1>
+        <div className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
+          <h1 className="text-6xl font-bold">
+          {user.name ? user.name : "No Name"}
+          </h1>
 
         <img src={user.pfp === "notalink.com" ? defaultPfp : user.pfp} height="100px" width="100px" alt="Profile Picture" className="img-fluid mb-2" />
 
@@ -42,7 +42,9 @@ export default function Profile() {
         <p className="mt-3 text-2xl"> {/*TODO make club viewer more robust*/}
         Clubs: {user.clubs && user.clubs.length > 0 ? user.clubs.map((club: any) => getClub(club).name).join(", ") : "None"}
         </p>
+            
       </div>
+    </div>
     </div>
     </>
   )
