@@ -84,7 +84,7 @@ router.put('/join/:clubId', verifyRequest, async (req, res) => {
 
         // Check if the user is already a member
         if (club.members.includes(userId)) {
-            return res.status(400).json({ message: "User already a member of this club" });
+            return res.status(200).json({ message: "User already a member of this club" });
         }
 
         // Add user to the club
