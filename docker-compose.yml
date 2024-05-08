@@ -5,10 +5,14 @@ services:
     build:
       context: ./frontend/teamxfrontend
       dockerfile: Dockerfile
+      target: development
     ports:
       - "3000:3000"
     depends_on:
       - backend
+    volumes:
+      - ./frontend/teamxfrontend/.next:/app/.next
+      - ./frontend/teamxfrontend:/app/src
 
   backend: # no exposed ports necessary here
     build:
