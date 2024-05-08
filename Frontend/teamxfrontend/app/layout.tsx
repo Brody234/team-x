@@ -6,6 +6,7 @@ import "./globals.css";
 import {EventsProvider, useEvents} from "./contexts/EventContext"
 import {LoginProvider} from './contexts/LoginContext'
 import {ClubProvider} from './contexts/ClubContext'
+import { Suspense } from "react";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -26,7 +27,9 @@ export default function RootLayout({
         <EventsProvider>
           <LoginProvider>
             <ClubProvider>
-            {children}
+              <Suspense fallback={<div>Loading...</div>}>
+              {children}
+              </Suspense>
            </ClubProvider>
           </LoginProvider>
         </EventsProvider>

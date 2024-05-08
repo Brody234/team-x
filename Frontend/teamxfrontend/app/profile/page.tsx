@@ -4,6 +4,7 @@ import { useLogin } from '../contexts/LoginContext';
 import Header from '../header/header';
 import { useRouter } from 'next/navigation';
 import { useClubs } from '../contexts/ClubContext';
+import { useEffect } from 'react';
 
 //TODO change this or make it db default
 const defaultPfp = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/680px-Default_pfp.svg.png";
@@ -13,9 +14,14 @@ export default function Profile() {
   const { getClub } = useClubs();
   const router = useRouter();
 
+  useEffect(() => {
+    if(!localUser) {
+      router.push("/login?redirect=/profile", {});
+    }
+  }, [localUser, router]);
+
   if(!localUser) {
-    router.push("/login?redirect=/profile", {})
-    return <div>Redirecting to login...</div>
+    return <div>Redirecting to login...</div>;
   }
 
   //this line is temporary until we want to view other users' pages while not signed in as them
