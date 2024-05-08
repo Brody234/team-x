@@ -36,44 +36,20 @@ export default function Profile() {
   return (
     <>
     <Header />
-      <h1>Profile
-        <div className="search-bar">
+      <h1 className = "text-3xl text-Black font-bold">Profile</h1>
+        <h2>
+          <div className="search-bar">
             <input type="text" placeholder="Search"/>
             <button>Default</button>
             <button>A-Z</button>
             <button>List view</button>
-        </div>
-      </h1>
+          </div>
+        </h2>
       <div className="flex flex-row w-full">
         <div className="flex p-4 w-1/2">
           <ProfileCard />
         </div>
       </div>
-        
-    <div className ="flow-root"></div>
-    <div className="flex items-center gap-10 py-9 pr-40 pl-40 mt-2 mb-1 max-w-full bg-green-300 rounded-3xl w-[795px] max-md:flex-wrap max-md:px-20">
-    <div className="items-left space-y">
-        <div className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-          <h1 className="text-6xl font-bold">
-          {user.name ? user.name : "No Name"}
-          </h1>
-
-        <img src={user.pfp === "notalink.com" ? defaultPfp : user.pfp} height="100px" width="100px" alt="Profile Picture" className="img-fluid mb-2" />
-
-        <p className="mt-3 text-2xl">
-        {user.email}
-        </p>
-        
-        <p className="mt-3 text-2xl"> {/*TODO make club viewer more robust*/}
-        Clubs: {user.clubs && user.clubs.length > 0 ? user.clubs.map((club: any) => getClub(club).name).join(", ") : "None"}
-        </p>
-            
-      </div>
-    </div>
-    </div>
-
-
-
 
     <div className="flex">
         {/* Search bar container */}
