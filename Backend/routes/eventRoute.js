@@ -17,18 +17,54 @@ router.get('/all', async (req, res) =>{
     }
 })
 
-router.patch('/going/:id', verifyRequest, getEvent, async(req, res)=>{
-    res.event.attendees.push(req.body.user)
-    res.user.events.push(res.event)
+router.patch('/going/:id', verifyRequest, async(req, res)=>{
+    const user = req.body.user;
+    const event = await Event.findById(req.params.id);
+    if(!event)
+        res.status(404).json({message: "Event Not Found"})
+
+    user.events.push(event._id);
+    event.attendees.push(user._id);
     try{
-        const newE = await res.event.save()
-        const newU = await res.user.save()
+        const newE = await event.save()
+        const newU = await user.save()
         res.status(200).json({message: "Going To Event"})
     }
     catch(err){
         res.status(500).json({message: err.message})
     }
 })
+
+router.patch('/notgoing/:id', verifyRequest, async(req, res)=>{
+    const user = req.body.user;
+    const event = await Event.findById(req.params.id);
+    if(!event)
+        res.status(404).json({message: "Event Not Found"})
+
+    user.events = user.events.filter((e)=> e != event._id);
+    event.attendees = event.attendees.filter((e)=> e != user._id);
+    try{
+        const newE = await event.save()
+        const newU = await user.save()
+        res.status(200).json({message: "Not Going To Event"})
+    }
+    catch(err){
+        res.status(500).json({message: err.message})
+    }
+});
+
+// unregister from all events
+router.patch('/notgoing', verifyRequest, async(req, res)=>{
+    const user = req.body.user;
+    user.events = [];
+    try{
+        const newU = await user.save()
+        res.status(200).json({message: "Not Going To Any Event"})
+    }
+    catch(err){
+        res.status(500).json({message: err.message})
+    }
+});
 
 router.patch('/:id', verifyRequest, getEvent, async (req, res) => {
     if (req.body.name != null) {
