@@ -129,7 +129,7 @@ async function getClub(req, res, next) {
     try {
         club = await Club.findById(req.params.id);
         if (club == null) {
-            return res.status(404).json({ message: "Cannot Find Club" });
+            return res.status(404).json({ message: "Cannnot Find Club" });
         }
     }
     catch (err) {

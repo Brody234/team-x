@@ -6,6 +6,7 @@ const Club = require("../models/club");
 const Tag = ("../models/tag");
 
 const { verifyRequest } = require("../common/auth");
+const event = require('../models/event');
 
 router.get('/all', async (req, res) =>{
     try{
@@ -113,9 +114,10 @@ router.get('/:id', getEvent, (req, res) => {
 async function getEvent(req, res, next) {
     let event
     try {
+        console.log(req.params)
         event = await Event.findById(req.params.id);
         if (event == null) {
-            return res.status(404).json({ message: "Cannot Find Club" });
+            return res.status(404).json({ message: "Cannot Find Event" });
         }
     }
     catch (err) {
@@ -124,6 +126,69 @@ async function getEvent(req, res, next) {
     res.event = event;
     next();
 };
+
+
+
+router.put('/rsvp', verifyRequest, async (req, res) => {
+    let eventId = req.body.id; 
+    const ev = await Event.find({ _id: eventId});
+    const event = ev[0];
+
+    let user_email = req.body.email;
+    const us = await User.find({ email: user_email });
+    const user = us[0];
+
+    const attending = req.body.attending;
+
+    try {
+        if (attending) {
+            if (!event.attendees.includes(user._id.toString())) { 
+                console.log('User is not an attendee.');
+
+                event.attendees.push(user._id);
+                console.log(event.attendees)
+
+                user.events.push(event._id);
+                console.log(user.events)
+
+                await event.save(); 
+                console.log('User added to attendees list.');
+
+                await user.save();                
+                console.log('Event added to user events list.');
+                
+                
+                res.send('Event added to user events list. User added to attendees list.');
+
+            } else {
+                console.log('User is already an attendee.');
+                res.send('User is already an attendee.');
+            }
+        } else {
+            if (event.attendees.includes(user._id.toString())) {
+                console.log('User is an attendee.');
+
+                event.attendees = event.attendees.filter(id => id.toString() !== user._id.toString());
+                console.log(event.attendees)
+                await event.save();
+                console.log('User removed from attendees list.');
+
+                user.events = user.events.filter(id => id.toString() !== eventId);
+                console.log(user.events)
+                await user.save();
+
+                res.send('User removed from attendees list. Event removed from user events list.');
+            } else {
+                console.log('User is not an attendee.');
+                res.send('User is not an attendee.');
+            }
+        }
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+})
+
 
 async function getUser(req, res, next) {
     let user
@@ -145,7 +210,7 @@ async function getClub(req, res, next) {
     try {
         club = await Club.findById(req.body.clubPosting);
         if (club == null) {
-            return res.status(404).json({ message: "Cannot Find Club" });
+            return res.status(404).json({ message: "Cannnot Find Club" });
         }
     }
     catch (err) {

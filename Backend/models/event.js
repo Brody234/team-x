@@ -8,7 +8,7 @@ const eventSchema = new Schema({
         default: "Unnamed Club"
     },
     tags: {
-        type: [""],
+        type: [String],
         require: true,
         default: []
     },
