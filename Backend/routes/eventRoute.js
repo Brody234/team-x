@@ -24,13 +24,13 @@ router.patch('/going/:id', verifyRequest, async(req, res)=>{
     if(!event)
         res.status(404).json({message: "Event Not Found"})
 
-    if(user.events.includes(event._id)) {
+    if(!user.events.includes(event._id)) {
         user.events.push(event._id);
     } else {
         user.events = user.events.filter((e)=> e != event._id);
     }
 
-    if(event.attendees.includes(user._id)) {
+    if(!event.attendees.includes(user._id)) {
         event.attendees.push(user._id);
     } else {
         event.attendees = event.attendees.filter((e)=> e != user._id);
