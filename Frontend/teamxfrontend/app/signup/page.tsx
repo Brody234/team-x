@@ -58,7 +58,7 @@ export default function SignUpPage() {
             onChange = {(e)=>setName(e.target.value)}
             className="shrink-0 mt-1 h-14 rounded-xl border border-solid bg-stone-50 border-stone-500 border-opacity-30 max-md:max-w-full" style = {{color: "black"}}/>
 
-<div className="flex gap-5 py-0.5 pr-2.5 mt-6 w-full max-md:flex-wrap max-md:max-w-full">
+            <div className="flex gap-5 py-0.5 pr-2.5 mt-6 w-full max-md:flex-wrap max-md:max-w-full">
               <div className="flex-auto my-auto text-base text-black">
                 Your email
               </div>
