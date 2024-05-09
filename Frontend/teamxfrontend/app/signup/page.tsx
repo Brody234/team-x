@@ -21,8 +21,7 @@ export default function SignUpPage() {
   }
   const onLogin = async () =>{
     const token = await newRequest.post('/auth/register', {email: email, password: password, name: name, hidden: false, emailNotifications: notis, confirmPassword: confirmPass })
-    setToken(token.data)
-    console.log(token.data)
+    setToken(token.data.token)
     if(token.data){
       window.location.href = "/"
     }

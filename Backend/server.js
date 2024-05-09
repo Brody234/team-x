@@ -30,6 +30,8 @@ const eventRouter = require('./routes/eventRoute');
 app.use('/event', eventRouter);
 const clubRouter = require('./routes/clubRoute');
 app.use('/club', clubRouter);
+const tagRouter = require('./routes/tagsRoute');
+app.use('/tags', tagRouter)
 const authRouter = require('./routes/authRoute');
 app.use('/auth', authRouter);
 
