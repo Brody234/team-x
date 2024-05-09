@@ -92,7 +92,7 @@ async function getTag(req, res, next) {
     try {
         tag = await Tag.findById(req.params.id);
         if (tag == null) {
-            return res.status(404).json({ message: "Cannot Find Club" });
+            return res.status(404).json({ message: "Cannnot Find Club" });
         }
     }
     catch (err) {
