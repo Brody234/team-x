@@ -50,10 +50,20 @@ router.post('/create', verifyRequest, unique, async (req, res) => {
         name: req.body.name,
         tags: req.body.tags,
         events: [],
-        admins: req.body.admins,
-        owner: req.body.owner,
-        members: req.body.members,
+        admins: [req.body.user._id],
+        owner: req.body.user._id,
+        members: [req.body.user._id],
     });
+    //update user to be owner of club and an admin
+    try {
+        req.body.user.clubs.push(club._id);
+        req.body.user.clubsAdministrated.push(club._id);
+        req.body.user.clubsOwned.push(club._id);
+        await req.body.user.save();
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
     try {
         if (res.issue === "None") {
             const newUser = await club.save();

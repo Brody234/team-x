@@ -26,7 +26,7 @@ export default function LoginPage() {
       alert("Invalid email or password");
       return;
     }
-    setToken(token.data.token)
+    setToken(token.data.token);
     console.log(token.data)
 
     //load local user information and provide token as credentials
