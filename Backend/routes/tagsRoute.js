@@ -3,7 +3,8 @@ const router = express.Router();
 const User = require("../models/user");
 const Event = require("../models/event")
 const Club = require("../models/club");
-const Tag = ("../models/tag");
+const Tag = require("../models/tag");
+
 
 const { verifyRequest } = require("../common/auth");
 
@@ -13,7 +14,7 @@ router.get('/all', async (req, res) =>{
         res.send(tags)
     }
     catch(error){
-        return res.status(500).json({message: err.message})
+        return res.status(500).json({message: error.message})
     }
 })
 

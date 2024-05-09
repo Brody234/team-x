@@ -19,11 +19,28 @@ router.get('/all', async (req, res) =>{
 })
 
 router.patch('/going/:id', verifyRequest, getEvent, async(req, res)=>{
-    res.event.attendees.push(req.body.user)
-    res.user.events.push(res.event)
+    console.log( req.body.user._id); // Check type of user ID
+    console.log( res.event.attendees[0]); //
+
+
+    if (!res.event.attendees.includes(req.body.user._id)) {
+        res.event.attendees.push(req.body.user._id);
+    } else {
+        console.log("unsubbign")
+        res.event.attendees = res.event.attendees.filter(attendantId => attendantId.toString() !== req.body.user._id.toString());
+    }
+
+    if (!req.body.user.events.includes(res.event._id)) {
+        req.body.user.events.push(res.event._id);
+    } else {
+        req.body.user.events = req.body.user.events.filter(eventId => eventId.toString() !== res.event._id.toString());
+    }
+
+    
+    
     try{
         const newE = await res.event.save()
-        const newU = await res.user.save()
+        const newU = await req.body.user.save()
         res.status(200).json({message: "Going To Event"})
     }
     catch(err){

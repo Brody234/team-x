@@ -18,9 +18,6 @@ export default function LoginPage() {
 
   const redirect = params.get("redirect") || "/";
 
-  const onSignUp = () =>{
-
-  }
   const onLogin = async () =>{
     let token;
     try {
@@ -29,7 +26,7 @@ export default function LoginPage() {
       alert("Invalid email or password");
       return;
     }
-    setToken(token.data)
+    setToken(token.data.token)
     console.log(token.data)
 
     //load local user information and provide token as credentials
@@ -59,7 +56,7 @@ export default function LoginPage() {
               className="self-center mt-1 text-base underline text-neutral-900"
               onClick={()=>{router.push("./signup")}}
             >
-              <span className="text-zinc-800">Don't have an account?</span>{" "}
+              <span className="text-zinc-800">Don&apos;t have an account?</span>{" "}
               <span className="text-neutral-900">Sign up</span>
             </button>
             

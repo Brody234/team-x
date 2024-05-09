@@ -10,6 +10,7 @@ export const EventsProvider = ({ children }) => {
     const fetchEvents = async () => {
         try{
             const response = await newRequest.get('/event/all')
+            console.log(response.data)
             setEvents(response.data)
         }
         catch(err){
