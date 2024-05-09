@@ -72,6 +72,38 @@ router.get('/:id', getClub, (req, res) => {
     res.json(res.club);
 });
 
+router.put('/join', verifyRequest, async (req, res) => {
+    let clubId = req.body.clubId;
+    const cl = await Club.find({ _id: clubId });
+    const club = cl[0];
+
+    let user_email = req.body.email;
+    const us = await User.find({ email: user_email });
+    const user = us[0];
+
+    try {
+        if (!cl) {
+            return res.status(404).json({ message: "Club not found" });
+        }
+
+        if (club.members.includes(user._id.toString())) {
+            return res.status(200).json({ message: "User already a member of this club" });
+        }
+
+        // Add user to the club
+        club.members.push(user._id);
+        await club.save();
+        
+        if (!user.clubs.includes(club._id.toString())) {
+            user.clubs.push(club._id);
+            await user.save();
+        }
+
+        res.json({ message: "Joined club successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 async function unique(req, res, next) {
     try {
@@ -108,3 +140,4 @@ async function getClub(req, res, next) {
 };
 
 module.exports = router;
+
