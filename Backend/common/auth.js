@@ -13,7 +13,7 @@ const User = require('../models/user')
  */
 async function verifyRequest(req, res, next) {
     const token = req.headers.token;
-
+    console.log(req.headers.token)
     if(!token) {
         return res.status(401).json({ message: 'Invalid token' });
     }

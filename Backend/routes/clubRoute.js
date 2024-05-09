@@ -50,10 +50,20 @@ router.post('/create', verifyRequest, unique, async (req, res) => {
         name: req.body.name,
         tags: req.body.tags,
         events: [],
-        admins: req.body.admins,
-        owner: req.body.owner,
-        members: req.body.members,
+        admins: [req.body.user._id],
+        owner: req.body.user._id,
+        members: [req.body.user._id],
     });
+    //update user to be owner of club and an admin
+    try {
+        req.body.user.clubs.push(club._id);
+        req.body.user.clubsAdministrated.push(club._id);
+        req.body.user.clubsOwned.push(club._id);
+        await req.body.user.save();
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message });
+    }
     try {
         if (res.issue === "None") {
             const newUser = await club.save();
@@ -72,6 +82,38 @@ router.get('/:id', getClub, (req, res) => {
     res.json(res.club);
 });
 
+router.put('/join', verifyRequest, async (req, res) => {
+    let clubId = req.body.clubId;
+    const cl = await Club.find({ _id: clubId });
+    const club = cl[0];
+
+    let user_email = req.body.email;
+    const us = await User.find({ email: user_email });
+    const user = us[0];
+
+    try {
+        if (!cl) {
+            return res.status(404).json({ message: "Club not found" });
+        }
+
+        if (club.members.includes(user._id.toString())) {
+            return res.status(200).json({ message: "User already a member of this club" });
+        }
+
+        // Add user to the club
+        club.members.push(user._id);
+        await club.save();
+        
+        if (!user.clubs.includes(club._id.toString())) {
+            user.clubs.push(club._id);
+            await user.save();
+        }
+
+        res.json({ message: "Joined club successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 async function unique(req, res, next) {
     try {
@@ -97,7 +139,7 @@ async function getClub(req, res, next) {
     try {
         club = await Club.findById(req.params.id);
         if (club == null) {
-            return res.status(404).json({ message: "Cannot Find Club" });
+            return res.status(404).json({ message: "Cannnot Find Club" });
         }
     }
     catch (err) {
@@ -108,3 +150,4 @@ async function getClub(req, res, next) {
 };
 
 module.exports = router;
+
