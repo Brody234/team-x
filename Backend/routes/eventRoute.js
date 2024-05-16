@@ -14,7 +14,7 @@ router.get('/all', async (req, res) => {
         res.send(events)
     }
     catch (error) {
-        return res.status(500).json({ message: err.message })
+        return res.status(500).json({ message: error.message })
     }
 })
 
