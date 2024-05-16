@@ -18,9 +18,14 @@ export const EventsProvider = ({ children }) => {
         }
     }
     fetchEvents()
-  }, [])
+  }, []);
+
+  const getEvent = (id) => {
+    return events.find((event) => event._id === id);
+  }
+  
   return (
-    <EventsContext.Provider value={{ currentEvent, setEvent, events, setEvents }}>
+    <EventsContext.Provider value={{ currentEvent, setEvent, events, setEvents, getEvent }}>
       {children}
     </EventsContext.Provider>
   );
