@@ -10,18 +10,32 @@ const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Fri
 
 
 const NewsFeed: React.FC = () => {
-  
+
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [prevScrollPos, setPrevScrollPos] = useState<number>(0);
   const [visible, setVisible] = useState<boolean>(true);
   const [dayFilts, setDayFilts] = useState([])
   const [tagFilts, setTagFilts] = useState([])
-  const { events } = useEvents(); 
-  const { localUser} = useLogin();
+  const { events } = useEvents();
+  const { localUser } = useLogin();
   const [filteredNews, setFilteredNews] = useState([]);
 
-  // Function to handle scroll events
+  const getDayName = (date) => {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return days[date.getDay()];
+  };
+
+  const getFormattedHour = (date) => {
+    let hour = date.getHours();
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    hour = hour ? hour : 12;
+    return `${hour} ${ampm}`;
+  };
+
+
+
   const handleScroll = () => {
     const currentScrollPos = window.scrollY;
     setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
@@ -31,7 +45,7 @@ const NewsFeed: React.FC = () => {
 
   useEffect(() => {
     if (localUser && filteredNews.length > 0) {
-      const subscribedStatus = filteredNews.map(event => 
+      const subscribedStatus = filteredNews.map(event =>
         event.attendees.map(a => a.toString()).includes(localUser._id.toString())
       );
       setIsSubscribed(subscribedStatus);
@@ -53,7 +67,7 @@ const NewsFeed: React.FC = () => {
     setFilteredNews(filtered);
   }, [searchQuery, events]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const filteredByName = events.filter((event: any) =>
       event.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -70,15 +84,15 @@ const NewsFeed: React.FC = () => {
     if (tagFilts.length > 0) {
       intermediateFiltered = intermediateFiltered.filter(event =>
         event.tags.some(tag => tagFilts.includes(tag))
-  );
+      );
     }
-    
-      
-          // Update the state with the filtered news
-          setFilteredNews(intermediateFiltered);
-      
-        
-  },[dayFilts, tagFilts])
+
+
+    // Update the state with the filtered news
+    setFilteredNews(intermediateFiltered);
+
+
+  }, [dayFilts, tagFilts])
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -87,16 +101,16 @@ const NewsFeed: React.FC = () => {
 
 
 
-  const handleClick = async (event:any, index: number) => {
+  const handleClick = async (event: any, index: number) => {
     const newSubscribedStatus = [...isSubscribed];
     newSubscribedStatus[index] = !newSubscribedStatus[index];
     setIsSubscribed(newSubscribedStatus);
 
-    try{
-      const data = await newRequest.patch('/event/going/'+ event._id)
+    try {
+      const data = await newRequest.patch('/event/going/' + event._id)
 
     }
-    catch(err){
+    catch (err) {
       console.log(err)
     }
   };
@@ -112,26 +126,27 @@ const NewsFeed: React.FC = () => {
       <div className="flex">
         {/* Search bar container */}
         <div className="sticky-search bg-gray-100 p-4 top-0 z-10 h-screen w-64 border-r border-gray-300">
-          <SearchBar value={searchQuery} dayFilts = {dayFilts} setDayFilts = {setDayFilts} tagFilts = {tagFilts} setTagFilts = {setTagFilts} onChange={handleSearch} />
+          <SearchBar value={searchQuery} dayFilts={dayFilts} setDayFilts={setDayFilts} tagFilts={tagFilts} setTagFilts={setTagFilts} onChange={handleSearch} />
         </div>
 
         {/* Main content container */}
         <div className="container mx-auto px-4 mt-16">
           <div className="col-md-9">
             <div className="flex justify-center pt-6 grid gap-4 grid-cols-2">
-            {filteredNews.map((event, i) => (
-              <div key={i} className="news-item mb-4 bg-white rounded p-4">
-                <div className="flex flex-col items-center">
-                  <img src={event.image} alt="News" style={{ maxHeight: "200px", maxWidth: "300px", width: "300px" }} />
-                  <h3 className="text-center">{event.name}</h3>
-                  <p className="text-center">{event.description}</p>
-                  {localUser && localUser._id ?
-                    <Button subscribed = {isSubscribed[i]} onClick={() => handleClick(event, i)}>
-                      {isSubscribed[i] ? 'Subscribed' : 'Subscribe'}
-                    </Button>
-                    : <></>
-                  }
-        
+              {filteredNews.map((event, i) => (
+                <div key={i} className="news-item mb-4 bg-white rounded p-4">
+                  <div className="flex flex-col items-center">
+                    <img src={event.image} alt="News" style={{ maxHeight: "200px", maxWidth: "300px", width: "300px" }} />
+                    <h3 className="text-center">{event.name}</h3>
+                    <p className="text-center">{event.description}</p>
+                    <p className="text-center">Starting at: {`${getDayName(new Date(event.startTime))}, ${new Date(event.startTime).getMonth() + 1}/${new Date(event.startTime).getDate()}, at ${getFormattedHour(new Date(event.startTime))}`}</p>
+                    {localUser && localUser._id ?
+                      <Button subscribed={isSubscribed[i]} onClick={() => handleClick(event, i)}>
+                        {isSubscribed[i] ? 'Subscribed' : 'Subscribe'}
+                      </Button>
+                      : <></>
+                    }
+
 
                   </div>
                 </div>

@@ -8,72 +8,74 @@ const Tag = ("../models/tag");
 const { verifyRequest } = require("../common/auth");
 const event = require('../models/event');
 
-router.get('/all', async (req, res) =>{
-    try{
+router.get('/all', async (req, res) => {
+    try {
         const events = await Event.find()
         res.send(events)
     }
-    catch(error){
-        return res.status(500).json({message: err.message})
+    catch (error) {
+        return res.status(500).json({ message: err.message })
     }
 })
 
-router.patch('/going/:id', verifyRequest, async(req, res)=>{
+router.patch('/going/:id', verifyRequest, async (req, res) => {
     const user = req.body.user;
     const event = await Event.findById(req.params.id);
-    if(!event)
-        res.status(404).json({message: "Event Not Found"})
+    if (!event)
+        res.status(404).json({ message: "Event Not Found" })
 
-    if(!user.events.includes(event._id)) {
+    if (!user.events.includes(event._id)) {
         user.events.push(event._id);
     } else {
-        user.events = user.events.filter((e)=> e != event._id);
+        user.events = user.events.filter((e) => {
+            e.toString() != event._id.toString()
+        });
     }
 
-    if(!event.attendees.includes(user._id)) {
+    if (!event.attendees.includes(user._id)) {
         event.attendees.push(user._id);
     } else {
-        event.attendees = event.attendees.filter((e)=> e != user._id);
+        event.attendees = event.attendees.filter((e) => e.toString() != user._id.toString());
     }
 
-    try{
+    try {
         const newE = await event.save()
         const newU = await user.save()
-        res.status(200).json({message: "Going To Event"})
+        res.status(200).json({ message: "Going To Event" })
     }
-    catch(err){
-        res.status(500).json({message: err.message})
+    catch (err) {
+        res.status(500).json({ message: err.message })
     }
 })
 
-router.patch('/notgoing/:id', verifyRequest, async(req, res)=>{
+router.patch('/notgoing/:id', verifyRequest, async (req, res) => {
     const user = req.body.user;
     const event = await Event.findById(req.params.id);
-    if(!event)
-        res.status(404).json({message: "Event Not Found"})
+    if (!event)
+        res.status(404).json({ message: "Event Not Found" })
 
-    user.events = user.events.filter((e)=> e != event._id);
-    event.attendees = event.attendees.filter((e)=> e != user._id);
-    try{
+    user.events = user.events.filter((e) => e != event._id);
+    event.attendees = event.attendees.filter((e) => e != user._id);
+    try {
         const newE = await event.save()
         const newU = await user.save()
-        res.status(200).json({message: "Not Going To Event"})
+        res.status(200).json({ message: "Not Going To Event" })
     }
-    catch(err){
-        res.status(500).json({message: err.message})
+    catch (err) {
+        res.status(500).json({ message: err.message })
     }
 });
 
 // unregister from all events
-router.patch('/notgoing', verifyRequest, async(req, res)=>{
+router.patch('/notgoing', verifyRequest, async (req, res) => {
     const user = req.body.user;
     user.events = [];
-    try{
+    try {
         const newU = await user.save()
-        res.status(200).json({message: "Not Going To Any Event"})
+        res.status(200).json({ message: "Not Going To Any Event" })
     }
-    catch(err){
-        res.status(500).json({message: err.message})
+    catch (err) {
+        res.status(500).json({ message: err.message })
     }
 });
 
@@ -102,7 +104,7 @@ router.patch('/:id', verifyRequest, getEvent, async (req, res) => {
     if (req.body.attendees != null) {
         res.user.attendees = req.body.attendees;
     };
-    
+
     try {
         const updatedEvent = await res.event.save();
         res.json({ message: "Event Updated" });
@@ -124,12 +126,12 @@ router.post('/create', verifyRequest, getClub, async (req, res) => {
         location: req.body.location,
     });
     try {
-        
+
         const newEvent = await event.save();
         res.club.events.push(newEvent._id)
         const saveClub = await res.club.save()
         res.status(201).json(newEvent);
-        
+
     }
     catch (err) {
         res.status(400).json({ message: err.message });
@@ -159,8 +161,8 @@ async function getEvent(req, res, next) {
 
 
 router.put('/rsvp', verifyRequest, async (req, res) => {
-    let eventId = req.body.id; 
-    const ev = await Event.find({ _id: eventId});
+    let eventId = req.body.id;
+    const ev = await Event.find({ _id: eventId });
     const event = ev[0];
 
     let user_email = req.body.email;
@@ -171,7 +173,7 @@ router.put('/rsvp', verifyRequest, async (req, res) => {
 
     try {
         if (attending) {
-            if (!event.attendees.includes(user._id.toString())) { 
+            if (!event.attendees.includes(user._id.toString())) {
                 console.log('User is not an attendee.');
 
                 event.attendees.push(user._id);
@@ -180,13 +182,13 @@ router.put('/rsvp', verifyRequest, async (req, res) => {
                 user.events.push(event._id);
                 console.log(user.events)
 
-                await event.save(); 
+                await event.save();
                 console.log('User added to attendees list.');
 
-                await user.save();                
+                await user.save();
                 console.log('Event added to user events list.');
-                
-                
+
+
                 res.send('Event added to user events list. User added to attendees list.');
 
             } else {
