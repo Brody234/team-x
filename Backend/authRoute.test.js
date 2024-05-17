@@ -24,7 +24,9 @@ beforeAll((done) => {
 // UNIT TESTS FOR AUTH/REGISTER
 describe('POST /auth/register', () => {
     it('should register a new user', async () => {
-      const newUser = { email: 'xyz@umass.edu', password: 'testpassword', confirmPassword: 'testpassword'};
+      const newUser = { email: 'xyz@umass.edu', 
+                        password: 'testpassword', 
+                        confirmPassword: 'testpassword'};
   
       const res = await request(app)
         .post('/auth/register')

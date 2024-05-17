@@ -31,8 +31,9 @@ router.post('/login', async (req, res) => {
         //TODO remove user return--it is just for testing.
         res.send({ token });
     } catch (error) {
-        console.error(error);
+        console.log(error);
         res.status(500).json({ message: 'Internal server error' });
+        
     }
 });
 
@@ -41,18 +42,21 @@ router.post('/register', async (req, res) => {
         const { email, password, confirmPassword } = req.body;
 
         if(password !== confirmPassword) {
+            console.log("Passwords do not match.")
             return res.status(400).json({message: 'Passwords do not match.'});
         }
 
         // hard code email check for now
         if(!email.endsWith("@umass.edu"))
         {
+            console.log("Email must be a valid UMass email.")
             return res.status(400).json({message: 'Email must be a valid UMass email.'});
         }
 
         // Check if email is already registered
         const existingUser = await Login.findOne({ email: email.trim() });
         if (existingUser) {
+            console.log("Email already registered.")
             return res.status(400).json({ message: 'Email already registered' });
         }
 
@@ -64,15 +68,15 @@ router.post('/register', async (req, res) => {
             email: email.trim(),
             saltedPasswordHash: hashedPassword,
         }).catch((err) => {
+            console.error(err);
             return res.status(400).json({ message: err.message });
         });
 
         //create user info for new user
         const user = await createUser(req.body);
-
         res.status(201).json(user);
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });

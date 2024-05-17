@@ -4,7 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const nodeEnv = process.env.NODE_ENV;
 const url = process.env.DATABASE_URL;
 
@@ -35,4 +35,10 @@ app.use('/tags', tagRouter)
 const authRouter = require('./routes/authRoute');
 app.use('/auth', authRouter);
 
-app.listen(port, () => console.log('server has started'));
+// app.listen(port, () => console.log('server has started'));
+
+if (require.main === module) {
+    app.listen(port, () => console.log(`Server has started on port ${port}`));
+}
+
+module.exports = app;

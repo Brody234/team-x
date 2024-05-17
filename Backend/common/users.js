@@ -16,6 +16,7 @@ async function createUser(user) {
         })
     }
     catch (error) {
+        console.log("error in createUser:");
         throw new Error(error.message);
     }
 }
