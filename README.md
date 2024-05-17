@@ -19,10 +19,21 @@ Welcome to the UMass Social Event Planner, a comprehensive web application desig
 To get started with the UMass Social Event Planner, simply sign up with your university credentials and complete your profile. Once set up, you can immediately start exploring events, join clubs, or even start your own.
 
 ## Starting the Application
-First, run the server:
+### First Run the Backend
 
 ```bash
-npm install
-# and
+cd Backend
+npm i
 npm start
+```
+## Then Run the Frontend
+```bash
+cd Frontend/teamxfrontend
+npm i
+npm run dev
+```
+## Running Unit Tests
+```bash
+cd Backend
+npm test
 ```
